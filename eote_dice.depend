@@ -1,0 +1,44 @@
+# depslib dependency file v1.0
+1475549511 source:c:\users\tarpe\desktop\eote_dice\random\random_functor.cpp
+	"random_functor.h"
+
+1475549498 c:\users\tarpe\desktop\eote_dice\random\random_functor.h
+	<algorithm>
+	<random>
+	<mutex>
+	"random_functor.inl"
+
+1475549528 c:\users\tarpe\desktop\eote_dice\random\random_functor.inl
+
+1476837174 source:c:\users\tarpe\desktop\eote_dice\main.cpp
+	<iostream>
+	<iomanip>
+	<fstream>
+	<vector>
+	<algorithm>
+	<random>
+	<mutex>
+	<map>
+	<memory>
+	"die_values.h"
+	"roll.h"
+
+1475617470 c:\users\tarpe\desktop\eote_dice\die_values.h
+	<sstream>
+
+1475556273 c:\users\tarpe\desktop\eote_dice\roll.h
+	"die_values.h"
+	"roll.inl"
+
+1475538239 source:c:\users\tarpe\desktop\eote_dice\roll.cpp
+	"roll.h"
+	"random.h"
+
+1474481718 c:\users\tarpe\desktop\eote_dice\random.h
+	"random/random_functor.h"
+
+1475538463 source:c:\users\tarpe\desktop\eote_dice\die_values.cpp
+	"die_values.h"
+
+1475559472 c:\users\tarpe\desktop\eote_dice\roll.inl
+
