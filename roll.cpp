@@ -7,9 +7,9 @@ namespace eote
     namespace Roll
     {
         DieValues
-        _Blue()
+        _Blue( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 5 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 5 ) : Random::Int( 0, 5 ) )
             {
                 case 0:
                 case 1:
@@ -29,9 +29,9 @@ namespace eote
         }
 
         DieValues
-        _Black()
+        _Black( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 5 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 5 ) : Random::Int( 0, 5 ) )
             {
                 default:
                 case 0:
@@ -48,9 +48,9 @@ namespace eote
         }
 
         DieValues
-        _Red()
+        _Red( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 11 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 11 ) : Random::Int( 0, 11 ) )
             {
                 default:
                 case 0:
@@ -77,9 +77,9 @@ namespace eote
         }
 
         DieValues
-        _Yellow()
+        _Yellow( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 11 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 11 ) : Random::Int( 0, 11 ) )
             {
                 default:
                 case 0:
@@ -106,9 +106,9 @@ namespace eote
         }
 
         DieValues
-        _Green()
+        _Green( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 7 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 7 ) : Random::Int( 0, 7 ) )
             {
                 default:
                 case 0:
@@ -130,9 +130,9 @@ namespace eote
         }
 
         DieValues
-        _Purple()
+        _Purple( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 7 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 7 ) : Random::Int( 0, 7 ) )
             {
                 default:
                 case 0:
@@ -154,9 +154,9 @@ namespace eote
         }
 
         DieValues
-        _White()
+        _White( Random::RandomFunctor * _rand )
         {
-            switch( Random::Int( 0, 11 ) )
+            switch( _rand != nullptr ? _rand->Int( 0, 11 ) : Random::Int( 0, 11 ) )
             {
                 default:
                 case 0:

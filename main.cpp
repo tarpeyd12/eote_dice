@@ -9,6 +9,8 @@
 #include <map>
 #include <memory>
 
+#include <thread>
+
 #include "die_values.h"
 #include "roll.h"
 
@@ -55,48 +57,105 @@ int main()
 {
     std::ios::sync_with_stdio( false );
 
-    std::vector<eote::Roll::Die> dieList;
+    std::vector< eote::Roll::Die > dieList;
 
     dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Yellow );
+    dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Black );
+    dieList.push_back( eote::Roll::Die::Black );
     dieList.push_back( eote::Roll::Die::Black );
 
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Purple );
-    //dieList.push_back( eote::Roll::Die::Purple );
-    //dieList.push_back( eote::Roll::Die::Red );
-    //dieList.push_back( eote::Roll::Die::Black );
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Red );
+    dieList.push_back( eote::Roll::Die::Red );
+    dieList.push_back( eote::Roll::Die::Red );
 
     dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::White );
+    dieList.push_back( eote::Roll::Die::White );
     dieList.push_back( eote::Roll::Die::White );
 
-    const uintmax_t count = 100000000;
+    const uintmax_t count = 10000000000;
 
     std::cout << std::fixed;
 
     //std::cout.unsetf( std::ios_base::floatfield );
 
     std::cout << "Rolling: " << eote::DiceListToString( dieList ) << " dice.\n";
-    std::cout.imbue(std::locale(std::locale(""), new comma_numpunct()));
+    std::cout.imbue( std::locale( std::locale(""), new comma_numpunct() ) ); // format integers with commas.
     std::cout << count << " times ...\n" << std::endl;
     //std::cout.imbue(std::locale(""));
 
-    std::map<eote::DieValues, uintmax_t> table;
+    #define NUM_THREADS 8
 
-    std::cout.precision(4);
-    for( uint64_t i = 0; i < count; ++i )
+    std::map< eote::DieValues, uintmax_t > table;
+    std::map< eote::DieValues, uintmax_t > table_array[ NUM_THREADS ];
+
+    Random::Random_Unsafe random_array[ NUM_THREADS ];
+    for( uint64_t i = 0; i < NUM_THREADS; ++i ) { random_array[i] = Random::Random_Unsafe( Random::Int() ); }
+
+    std::cout.precision( 4 );
+
+    auto _RunThreadDieRolls = [&]( uint64_t threadID, uint64_t numthreads, std::map< eote::DieValues, uintmax_t > * _table, Random::RandomFunctor * _rand, uint64_t _count )
+    {
+        for( uint64_t i = threadID; i < _count; i += numthreads )
+        {
+            auto die = eote::RollDice( dieList, _rand );
+            (*_table)[ die ] += 1;
+
+            if( threadID == 0 && i % 100000 == 0 ) std::cout << double(i)/double(_count)*100.0 << "% #unique=" << _table->size() << " itteration=" << i << "\r" << std::flush;
+            //if( i % 100000 == 0 ) std::cout << double(i)/double(count)*100.0 << "% c=" << table.size() << " i=" << i << "\r" << std::flush;
+        }
+    };
+    /*for( uint64_t i = 0; i < count; ++i )
     {
         auto die = eote::RollDice( dieList );
-        table[die] += 1;
+        table[ die ] += 1;
 
         if( i % 100000 == 0 ) std::cout << double(i)/double(count)*100.0 << "% c=" << table.size() << " i=" << i << "\r" << std::flush;
+    }*/
+
+    //_RunThreadDieRolls( 0, 1, &table, &random_array[0], count );
+
+    std::vector< std::thread * > _thread_list;
+
+    for( uint64_t i = 1; i < NUM_THREADS; ++i )
+    {
+        _thread_list.push_back( new std::thread( _RunThreadDieRolls, i, NUM_THREADS, &table_array[ i ], &random_array[ i ], count ) );
+        //_thread_list.back().start();
+    }
+    _RunThreadDieRolls( 0, NUM_THREADS, &table_array[ 0 ], &random_array[ 0 ], count );
+    for( uint64_t i = 1; i < _thread_list.size(); ++i )
+    {
+        _thread_list[ i ]->join();
+        delete _thread_list[ i ];
+        _thread_list[ i ] = nullptr;
     }
 
-    std::cout.precision(8);
+    std::cout << "\nConsolidating ...\n" << std::flush;
+    for( uint64_t i = 0; i < NUM_THREADS; ++i )
+    {
+        for( auto dp : table_array[ i ] )
+        {
+            table[ dp.first ] += dp.second;
+            std::cout << " " << table.size() << "\r";
+        }
+        table_array[i].clear();
+    }
 
-    std::vector<std::pair<uintmax_t, eote::DieValues>> probList;
+    std::cout << std::flush;
+
+    std::cout.precision( 8 );
+
+    std::vector< std::pair< uintmax_t, eote::DieValues > > probList;
 
     std::ofstream out_allProb( "./allProb.csv" );
 
@@ -135,7 +194,7 @@ int main()
 
     std::cout << "\nAt least one of:\n\n";
 
-    auto defaultDieValue = eote::DieValues();
+    //auto defaultDieValue = eote::DieValues();
 
     for( auto bucket : buckets )
     {
@@ -232,7 +291,7 @@ int main()
         std::cout << " df:" << std::setw(5) << std::right << std::setprecision(numDarkInBucket==numInBucket?1:2)        << double(numDarkInBucket)/double(numInBucket)*100.0 << "%";
         std::cout << " (" << numInBucket << ")";
 
-        std::cout << std::endl;
+        std::cout << "\n\ntotal unique combinations: " << table.size() << std::endl;
     }
 
 

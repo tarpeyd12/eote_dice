@@ -1,6 +1,8 @@
 #ifndef ROLL_H_INCLUDED
 #define ROLL_H_INCLUDED
 
+#include "random.h"
+
 #include "die_values.h"
 
 namespace eote
@@ -9,20 +11,20 @@ namespace eote
     {
         enum Die { Blue, Black, Red, Yellow, Green, Purple, White };
 
-        DieValues _Blue();
-        DieValues _Black();
-        DieValues _Red();
-        DieValues _Yellow();
-        DieValues _Green();
-        DieValues _Purple();
-        DieValues _White();
+        DieValues _Blue( Random::RandomFunctor * _rand = nullptr );
+        DieValues _Black( Random::RandomFunctor * _rand = nullptr );
+        DieValues _Red( Random::RandomFunctor * _rand = nullptr );
+        DieValues _Yellow( Random::RandomFunctor * _rand = nullptr );
+        DieValues _Green( Random::RandomFunctor * _rand = nullptr );
+        DieValues _Purple( Random::RandomFunctor * _rand = nullptr );
+        DieValues _White( Random::RandomFunctor * _rand = nullptr );
     }
 
     template < typename list_type >
-    inline DieValues RollDice( const list_type& l );
+    inline DieValues RollDice( const list_type& l, Random::RandomFunctor * _rand = nullptr );
 
     template < typename iterator_type >
-    inline DieValues RollDice( const iterator_type& begin, const iterator_type& end );
+    inline DieValues RollDice( const iterator_type& begin, const iterator_type& end, Random::RandomFunctor * _rand = nullptr );
 
     template < typename list_type >
     inline std::string DiceListToString( const list_type& l );
