@@ -25,8 +25,12 @@ namespace eote
         inline std::string toString( bool csv = false ) const;
 
         inline int operator[]( std::size_t i ) const;
-    };
 
+        friend inline bool operator==( const DieValues& lhs, const DieValues& rhs )
+        {
+            return lhs.success == rhs.success && lhs.advantage == rhs.advantage && lhs.triumph == rhs.triumph && lhs.force == rhs.force;
+        }
+    };
 
 
     DieValues&

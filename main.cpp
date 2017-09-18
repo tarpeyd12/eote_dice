@@ -7,6 +7,7 @@
 #include <random>
 #include <mutex>
 #include <map>
+#include <unordered_map>
 #include <memory>
 
 #include <thread>
@@ -45,6 +46,26 @@ namespace std
             return false;*/
         }
     };
+
+    template< >
+    struct hash< eote::DieValues >
+    {
+        std::size_t
+        operator()( const eote::DieValues& dv ) const
+        {
+            /*std::size_t out = 0;
+
+            for( int i = 0; i < 4; ++i )
+            {
+                out <<= 8;
+                out |= ( dv[i] & 0xff );
+            }
+            return out;*/
+
+            return ( (dv[0] & 0xff) << 8*3 ) | ( (dv[1] & 0xff) << 8*2 ) | ( (dv[2] & 0xff) << 8*1 ) | ( (dv[3] & 0xff) << 8*0 );
+        }
+    };
+
 }
 
 class comma_numpunct : public std::numpunct< char >
@@ -71,28 +92,32 @@ int main()
 
     std::vector< eote::Roll::Die > dieList;
 
+    dieList.push_back( eote::Roll::Die::Yellow );
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Black );
+
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Red );
+
+    dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::White );
+
     /*dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
-    dieList.push_back( eote::Roll::Die::Black );
-
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Red );
-
-    dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::White );*/
-
-    dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Red );
     dieList.push_back( eote::Roll::Die::Black );
     dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::White );
+    //dieList.push_back( eote::Roll::Die::White );
+    */
 
-     uintmax_t count = 1000000000000;
+     uintmax_t count = 500000000;
 
     std::cout << std::fixed;
 
@@ -107,13 +132,12 @@ int main()
 
     if( combo_possibilities )
     {
-        std::cout << "" << combo_possibilities << " combinations possible.\n" << std::endl;
-
-        //count = combo_possibilities;
+        std::cout << "" << combo_possibilities << " combinations possible." << std::endl;
+        std::cout << (long double)(count) / (long double)(combo_possibilities) << " random rolls per actual possible face combination." << std::endl;
+        std::cout << std::endl;
     }
     else
     {
-        //std::cout << "ERROR: too many possibilities to hold in uint64_t" << std::endl;
         std::cout << "ERROR: number of possibilities exceeds " << ( ~1ull ) << std::endl;
     }
     //std::cout << "" << (combo_possibilities ? combo_possibilities : "ERROR: too many possibilities to hold in uint64_t" ) << " combinations possible.\n" << std::endl;
@@ -122,15 +146,15 @@ int main()
 
     #define NUM_THREADS 1
 
-    std::map< eote::DieValues, uintmax_t > table;
-    std::map< eote::DieValues, uintmax_t > table_array[ NUM_THREADS ];
+    std::unordered_map< eote::DieValues, uintmax_t > table;
+    std::unordered_map< eote::DieValues, uintmax_t > table_array[ NUM_THREADS ];
 
     Random::Random_Unsafe random_array[ NUM_THREADS ];
     for( uint64_t i = 0; i < NUM_THREADS; ++i ) { random_array[ i ] = Random::Random_Unsafe( Random::Int() ); }
 
     std::cout.precision( 4 );
 
-    auto _RunThreadDieRolls = [&]( uint64_t threadID, uint64_t numthreads, std::map< eote::DieValues, uintmax_t > * _table, Random::RandomFunctor * _rand, uint64_t _count )
+    auto _RunThreadDieRolls = [&]( uint64_t threadID, uint64_t numthreads, std::unordered_map< eote::DieValues, uintmax_t > * _table, Random::RandomFunctor * _rand, uint64_t _count )
     {
         for( uint64_t i = threadID; i < _count; i += numthreads )
         {
