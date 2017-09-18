@@ -87,3 +87,50 @@
 1474481718 c:\users\tarpe\documents\github\eote_dice\random.h
 	"random/random_functor.h"
 
+1505255114 source:c:\users\tarpeyd12\documents\github\eote_dice\die_values.cpp
+	"die_values.h"
+
+1485373940 c:\users\tarpeyd12\documents\github\eote_dice\die_values.h
+	<sstream>
+
+1485373940 source:c:\users\tarpeyd12\documents\github\eote_dice\random\random_functor.cpp
+	"random_functor.h"
+
+1485373940 c:\users\tarpeyd12\documents\github\eote_dice\random\random_functor.h
+	<algorithm>
+	<random>
+	<mutex>
+	"random_functor.inl"
+
+1485373940 c:\users\tarpeyd12\documents\github\eote_dice\\random
+
+1485373940 c:\users\tarpeyd12\documents\github\eote_dice\random\random_functor.inl
+
+1505208703 source:c:\users\tarpeyd12\documents\github\eote_dice\roll.cpp
+	"roll.h"
+	"random.h"
+
+1505338841 c:\users\tarpeyd12\documents\github\eote_dice\roll.h
+	"random.h"
+	"die_values.h"
+	"roll.inl"
+
+1485373940 c:\users\tarpeyd12\documents\github\eote_dice\random.h
+	"random/random_functor.h"
+
+1505338848 c:\users\tarpeyd12\documents\github\eote_dice\roll.inl
+
+1505377316 source:c:\users\tarpeyd12\documents\github\eote_dice\main.cpp
+	<iostream>
+	<iomanip>
+	<fstream>
+	<vector>
+	<algorithm>
+	<random>
+	<mutex>
+	<map>
+	<memory>
+	<thread>
+	"die_values.h"
+	"roll.h"
+

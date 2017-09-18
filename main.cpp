@@ -16,12 +16,24 @@
 
 namespace std
 {
-    template<>
-    struct less<eote::DieValues>
+    template< >
+    struct less< eote::DieValues >
     {
         bool
         operator()( const eote::DieValues& lhs, const eote::DieValues& rhs ) const
         {
+            if( lhs.triumph != rhs.triumph ) { return lhs.triumph > rhs.triumph; } // most significant
+            if( lhs.success != rhs.success ) { return lhs.success > rhs.success; }
+            if( lhs.advantage != rhs.advantage ) { return lhs.advantage > rhs.advantage; }
+            if( lhs.force != rhs.force ) { return lhs.force > rhs.force; } // least significant
+            return false;
+
+            /*if( lhs[0] != rhs[0] ) { return lhs[0] > rhs[0]; }
+            if( lhs[1] != rhs[1] ) { return lhs[1] > rhs[1]; }
+            if( lhs[2] != rhs[2] ) { return lhs[2] > rhs[2]; }
+            if( lhs[3] != rhs[3] ) { return lhs[3] > rhs[3]; }
+            return false;
+
             for( int i = 0; i < 4; ++i )
             {
                 if( lhs[i] == rhs[i] )
@@ -30,12 +42,12 @@ namespace std
                 }
                 return lhs[i] > rhs[i];
             }
-            return false;
+            return false;*/
         }
     };
 }
 
-class comma_numpunct : public std::numpunct<char>
+class comma_numpunct : public std::numpunct< char >
 {
   protected:
     virtual
@@ -59,48 +71,62 @@ int main()
 
     std::vector< eote::Roll::Die > dieList;
 
-    dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Yellow );
+    /*dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Black );
+
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Red );
+
+    dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::White );*/
+
+    dieList.push_back( eote::Roll::Die::Yellow );
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Red );
     dieList.push_back( eote::Roll::Die::Black );
-    dieList.push_back( eote::Roll::Die::Black );
-
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Red );
-    dieList.push_back( eote::Roll::Die::Red );
-    dieList.push_back( eote::Roll::Die::Red );
-
-    dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::White );
-    dieList.push_back( eote::Roll::Die::White );
-    dieList.push_back( eote::Roll::Die::White );
 
-    const uintmax_t count = 10000000000;
+     uintmax_t count = 1000000000000;
 
     std::cout << std::fixed;
 
     //std::cout.unsetf( std::ios_base::floatfield );
 
-    std::cout << "Rolling: " << eote::DiceListToString( dieList ) << " dice.\n";
     std::cout.imbue( std::locale( std::locale(""), new comma_numpunct() ) ); // format integers with commas.
-    std::cout << count << " times ...\n" << std::endl;
+
+    std::cout << "Rolling: " << eote::DiceListToString( dieList ) << " dice.\n";
+    std::cout << count << " times ..." << std::endl;
+
+    uint64_t combo_possibilities = eote::DiceListTotalPossibleSideCombinations( dieList );
+
+    if( combo_possibilities )
+    {
+        std::cout << "" << combo_possibilities << " combinations possible.\n" << std::endl;
+
+        //count = combo_possibilities;
+    }
+    else
+    {
+        //std::cout << "ERROR: too many possibilities to hold in uint64_t" << std::endl;
+        std::cout << "ERROR: number of possibilities exceeds " << ( ~1ull ) << std::endl;
+    }
+    //std::cout << "" << (combo_possibilities ? combo_possibilities : "ERROR: too many possibilities to hold in uint64_t" ) << " combinations possible.\n" << std::endl;
+
     //std::cout.imbue(std::locale(""));
 
-    #define NUM_THREADS 8
+    #define NUM_THREADS 1
 
     std::map< eote::DieValues, uintmax_t > table;
     std::map< eote::DieValues, uintmax_t > table_array[ NUM_THREADS ];
 
     Random::Random_Unsafe random_array[ NUM_THREADS ];
-    for( uint64_t i = 0; i < NUM_THREADS; ++i ) { random_array[i] = Random::Random_Unsafe( Random::Int() ); }
+    for( uint64_t i = 0; i < NUM_THREADS; ++i ) { random_array[ i ] = Random::Random_Unsafe( Random::Int() ); }
 
     std::cout.precision( 4 );
 
@@ -151,7 +177,7 @@ int main()
         table_array[i].clear();
     }
 
-    std::cout << std::flush;
+    std::cout << std::endl;
 
     std::cout.precision( 8 );
 

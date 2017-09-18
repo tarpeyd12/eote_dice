@@ -44,7 +44,7 @@ namespace eote
     std::string
     DiceListToString( const iterator_type& begin, const iterator_type& end )
     {
-        uintmax_t blue=0, black=0, red=0, yellow=0, green=0, purple=0, white=0;
+        uintmax_t blue = 0, black = 0, red = 0, yellow = 0, green = 0, purple = 0, white = 0;
 
         for( auto it = begin; it != end; ++it )
         {
@@ -77,6 +77,51 @@ namespace eote
         while( str.size() && ( str.back() == ' ' || str.back() == ',' ) ) { str = str.substr( 0, str.size()-1 ); }
 
         return str;
+    }
+
+    template < typename list_type >
+    inline uint64_t DiceListTotalPossibleSideCombinations( const list_type& l )
+    {
+        return DiceListTotalPossibleSideCombinations( l.begin(), l.end() );
+    }
+
+    template < typename iterator_type >
+    inline uint64_t DiceListTotalPossibleSideCombinations( const iterator_type& begin, const iterator_type& end )
+    {
+        uint64_t count = 1;
+
+        if( begin == end )
+        {
+            return 0;
+        }
+
+        for( auto it = begin; it != end; ++it )
+        {
+            uint64_t factor = 0;
+            switch( *it )
+            {
+                case Roll::Blue:
+                case Roll::Black:  factor = 6;  break;
+
+                case Roll::Green:
+                case Roll::Purple: factor = 8;  break;
+
+                case Roll::Yellow:
+                case Roll::Red:
+                case Roll::White:  factor = 12; break;
+            }
+
+            uint64_t next = count * factor;
+
+            if( next < count ) // overflow
+            {
+                return 0;
+            }
+
+            count = next;
+        }
+
+        return count;
     }
 }
 

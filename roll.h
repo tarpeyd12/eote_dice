@@ -31,6 +31,12 @@ namespace eote
 
     template < typename iterator_type >
     inline std::string DiceListToString( const iterator_type& begin, const iterator_type& end );
+
+    template < typename list_type >
+    inline uint64_t DiceListTotalPossibleSideCombinations( const list_type& l );
+
+    template < typename iterator_type >
+    inline uint64_t DiceListTotalPossibleSideCombinations( const iterator_type& begin, const iterator_type& end );
 }
 
 #include "roll.inl"

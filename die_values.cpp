@@ -4,11 +4,11 @@ namespace eote
 {
 
     DieValues::DieValues()
-    : success(0), advantage(0), triumph(0), force(0)
+    : success( 0 ), advantage( 0 ), triumph( 0 ), force( 0 )
     { }
 
     DieValues::DieValues( int s, int a, int t, int f )
-    : success(s), advantage(a), triumph(t), force(f)
+    : success( s ), advantage( a ), triumph( t ), force( f )
     { }
 
     namespace Value
