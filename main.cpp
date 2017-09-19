@@ -92,7 +92,7 @@ int main()
 
     std::vector< eote::Roll::Die > dieList;
 
-    dieList.push_back( eote::Roll::Die::Yellow );
+    /*dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
@@ -103,9 +103,14 @@ int main()
     dieList.push_back( eote::Roll::Die::Red );
 
     dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::White );*/
+
+    dieList.push_back( eote::Roll::Die::Yellow );
+    dieList.push_back( eote::Roll::Die::Yellow );
+    dieList.push_back( eote::Roll::Die::Red );
     dieList.push_back( eote::Roll::Die::White );
 
-    /*dieList.push_back( eote::Roll::Die::Yellow );
+    //dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
@@ -113,11 +118,13 @@ int main()
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Black );
+    dieList.push_back( eote::Roll::Die::Black );
+    dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Blue );
     //dieList.push_back( eote::Roll::Die::White );
-    */
 
-     uintmax_t count = 500000000;
+
+     uintmax_t count = 500000000000;
 
     std::cout << std::fixed;
 
@@ -132,6 +139,8 @@ int main()
 
     if( combo_possibilities )
     {
+        count = combo_possibilities;
+
         std::cout << "" << combo_possibilities << " combinations possible." << std::endl;
         std::cout << (long double)(count) / (long double)(combo_possibilities) << " random rolls per actual possible face combination." << std::endl;
         std::cout << std::endl;
@@ -144,9 +153,9 @@ int main()
 
     //std::cout.imbue(std::locale(""));
 
-    #define NUM_THREADS 1
+    #define NUM_THREADS 4
 
-    std::unordered_map< eote::DieValues, uintmax_t > table;
+    std::map< eote::DieValues, uintmax_t > table; // must be map
     std::unordered_map< eote::DieValues, uintmax_t > table_array[ NUM_THREADS ];
 
     Random::Random_Unsafe random_array[ NUM_THREADS ];
@@ -158,7 +167,8 @@ int main()
     {
         for( uint64_t i = threadID; i < _count; i += numthreads )
         {
-            auto die = eote::RollDice( dieList, _rand );
+            //auto die = eote::RollDice( dieList, _rand );
+            auto die = eote::_IterateDice( dieList, i );
             (*_table)[ die ] += 1;
 
             if( threadID == 0 && i % 100000 == 0 ) std::cout << double(i)/double(_count)*100.0 << "% #unique=" << _table->size() << " itteration=" << i << "\r" << std::flush;

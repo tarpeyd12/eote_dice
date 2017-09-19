@@ -18,6 +18,17 @@ namespace eote
         DieValues _Green( Random::RandomFunctor * _rand = nullptr );
         DieValues _Purple( Random::RandomFunctor * _rand = nullptr );
         DieValues _White( Random::RandomFunctor * _rand = nullptr );
+
+        namespace _Iterate
+        {
+            DieValues _Blue( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _Black( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _Red( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _Yellow( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _Green( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _Purple( uintmax_t count, uintmax_t * carry = nullptr );
+            DieValues _White( uintmax_t count, uintmax_t * carry = nullptr );
+        }
     }
 
     template < typename list_type >
@@ -25,6 +36,12 @@ namespace eote
 
     template < typename iterator_type >
     inline DieValues RollDice( const iterator_type& begin, const iterator_type& end, Random::RandomFunctor * _rand = nullptr );
+
+    template < typename list_type >
+    inline DieValues _IterateDice( const list_type& l, uintmax_t count );
+
+    template < typename iterator_type >
+    inline DieValues _IterateDice( const iterator_type& begin, const iterator_type& end, uintmax_t count );
 
     template < typename list_type >
     inline std::string DiceListToString( const list_type& l );

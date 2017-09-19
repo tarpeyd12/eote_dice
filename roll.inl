@@ -32,6 +32,32 @@ namespace eote
         return out;
     }
 
+    template < typename list_type >
+    inline DieValues _IterateDice( const list_type& l, uintmax_t count )
+    {
+        return _IterateDice( l.begin(), l.end(), count );
+    }
+
+    template < typename iterator_type >
+    inline DieValues _IterateDice( const iterator_type& begin, const iterator_type& end, uintmax_t count )
+    {
+        DieValues out;
+
+        for( auto it = begin; it != end; ++it )
+        {
+            switch( *it )
+            {
+                case Roll::Blue:   out += Roll::_Iterate::_Blue( count, &count );   break;
+                case Roll::Black:  out += Roll::_Iterate::_Black( count, &count );  break;
+                case Roll::Red:    out += Roll::_Iterate::_Red( count, &count );    break;
+                case Roll::Yellow: out += Roll::_Iterate::_Yellow( count, &count ); break;
+                case Roll::Green:  out += Roll::_Iterate::_Green( count, &count );  break;
+                case Roll::Purple: out += Roll::_Iterate::_Purple( count, &count ); break;
+                case Roll::White:  out += Roll::_Iterate::_White( count, &count );  break;
+            }
+        }
+        return out;
+    }
 
     template < typename list_type >
     std::string

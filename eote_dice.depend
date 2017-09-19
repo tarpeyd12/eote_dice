@@ -48,7 +48,7 @@
 1505722846 c:\users\tarpe\documents\github\eote_dice\die_values.h
 	<sstream>
 
-1505722531 source:c:\users\tarpe\documents\github\eote_dice\main.cpp
+1505777962 source:c:\users\tarpe\documents\github\eote_dice\main.cpp
 	<iostream>
 	<iomanip>
 	<fstream>
@@ -63,12 +63,12 @@
 	"die_values.h"
 	"roll.h"
 
-1505698071 c:\users\tarpe\documents\github\eote_dice\roll.h
+1505770202 c:\users\tarpe\documents\github\eote_dice\roll.h
 	"random.h"
 	"die_values.h"
 	"roll.inl"
 
-1505698071 c:\users\tarpe\documents\github\eote_dice\roll.inl
+1505770264 c:\users\tarpe\documents\github\eote_dice\roll.inl
 
 1505698071 source:c:\users\tarpe\documents\github\eote_dice\random\random_functor.cpp
 	"random_functor.h"
@@ -81,7 +81,7 @@
 
 1505698071 c:\users\tarpe\documents\github\eote_dice\random\random_functor.inl
 
-1505698071 source:c:\users\tarpe\documents\github\eote_dice\roll.cpp
+1505773490 source:c:\users\tarpe\documents\github\eote_dice\roll.cpp
 	"roll.h"
 	"random.h"
 
