@@ -188,6 +188,26 @@ GetProbabilityTable_TableCombineMethod( std::vector< eote::Roll::Die > dieList )
     return table;
 }
 
+std::map< eote::DieValues, uintmax_t >
+SimplifyTableForAxies( std::map< eote::DieValues, uintmax_t > table, uint8_t axisA, uint8_t axisB )
+{
+    axisA %= 4;
+    axisB %= 4;
+
+    std::map< eote::DieValues, uintmax_t > out;
+
+    for( auto entry : table )
+    {
+        eote::DieValues dummy;
+        dummy.setByIndex( axisA, entry.first[axisA] );
+        dummy.setByIndex( axisB, entry.first[axisB] );
+
+        out[ dummy ] += entry.second;
+    }
+
+    return out;
+}
+
 void
 ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t axisA, uint8_t axisB, std::ostream& out )
 {
@@ -200,6 +220,8 @@ ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t
     int minAxisB = table.begin()->first[axisB];
     int maxAxisB = table.begin()->first[axisB];
 
+    std::map< eote::DieValues, uintmax_t > simplifiyed_table;
+
     for( auto entry : table )
     {
         minAxisA = std::min<int>( minAxisA, entry.first[axisA] );
@@ -207,7 +229,15 @@ ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t
 
         minAxisB = std::min<int>( minAxisB, entry.first[axisB] );
         maxAxisB = std::max<int>( maxAxisB, entry.first[axisB] );
+
+        eote::DieValues dummy;
+        dummy.setByIndex( axisA, entry.first[axisA] );
+        dummy.setByIndex( axisB, entry.first[axisB] );
+
+        simplifiyed_table[ dummy ] += entry.second;
     }
+
+    //std::map< eote::DieValues, uintmax_t > simplifiyed_table = SimplifyTableForAxies( table, axisA, axisB );
 
     switch( axisA )
     {
@@ -238,9 +268,9 @@ ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t
             dummy.setByIndex( axisA, A );
             dummy.setByIndex( axisB, B );
 
-            auto s = table.find( dummy );
+            auto s = simplifiyed_table.find( dummy );
 
-            if( s == table.end() )
+            if( s == simplifiyed_table.end() )
             {
                 out << ",";
                 continue;
@@ -293,6 +323,8 @@ main()
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Blue );
+    dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Black );
     dieList.push_back( eote::Roll::Die::White );
