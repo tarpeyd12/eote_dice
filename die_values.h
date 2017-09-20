@@ -25,6 +25,7 @@ namespace eote
         inline std::string toString( bool csv = false ) const;
 
         inline int operator[]( std::size_t i ) const;
+        inline void setByIndex( std::size_t i, int v );
 
         friend inline bool operator==( const DieValues& lhs, const DieValues& rhs )
         {
@@ -154,6 +155,27 @@ namespace eote
                 return force;
         }
         return 0;
+    }
+
+    void
+    DieValues::setByIndex( std::size_t i, int v )
+    {
+        switch( i )
+        {
+            default:
+            case 0:
+                triumph = v;
+                break;
+            case 1:
+                success = v;
+                break;
+            case 2:
+                advantage = v;
+                break;
+            case 3:
+                force = v;
+                break;
+        }
     }
 
 
