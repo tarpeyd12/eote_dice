@@ -281,6 +281,64 @@ ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t
     }
 }
 
+void
+GetMinMaxValues( const std::map< eote::DieValues, uintmax_t >& inputProbList, eote::DieValues& min, eote::DieValues& max, uint64_t& numprobs )
+{
+    for( std::size_t i = 0; i < 4; ++i )
+    {
+        min.setByIndex( i, inputProbList.begin()->first[i] );
+        max.setByIndex( i, inputProbList.begin()->first[i] );
+    }
+
+    for( std::pair< eote::DieValues, uintmax_t > pair: inputProbList )
+    {
+        auto dieResult = pair.first;
+        auto probValue = pair.second;
+
+        numprobs += probValue;
+
+        for( std::size_t i = 0; i < 4; ++i )
+        {
+            if( dieResult[i] < min[i] ) { min.setByIndex( i, dieResult[i] ); }
+            if( dieResult[i] > max[i] ) { max.setByIndex( i, dieResult[i] ); }
+        }
+    }
+}
+
+void
+PrintAtLeast( std::size_t axis, const std::map< eote::DieValues, uintmax_t >& inputProbList, const eote::DieValues& min, const eote::DieValues& max, uint64_t numProbs, std::ostream& out = std::cout )
+{
+    //assert( axis < 4 );
+    if( axis >= 4 )
+    {
+        return;
+    }
+
+    for( int i = min[axis]; i <= max[axis]; ++i )
+    {
+        uint64_t current = 0;
+
+        for( std::pair< eote::DieValues, uintmax_t > pair : inputProbList )
+        {
+            auto dieResult = pair.first;
+            auto probValue = pair.second;
+
+            if( dieResult[axis] >= i )
+            {
+                current += probValue;
+            }
+        }
+
+        switch(axis)
+        {
+            case 0: out << "At least " << i << " Triumph: " << (long double)(current)/(long double)(numProbs)*100.0 << " (" << current << "/" << numProbs << ")\n"; break;
+            case 1: out << "At least " << i << " Success: " << (long double)(current)/(long double)(numProbs)*100.0 << " (" << current << "/" << numProbs << ")\n"; break;
+            case 2: out << "At least " << i << " Advantage: " << (long double)(current)/(long double)(numProbs)*100.0 << " (" << current << "/" << numProbs << ")\n"; break;
+            case 3: out << "At least " << i << " Force: " << (long double)(current)/(long double)(numProbs)*100.0 << " (" << current << "/" << numProbs << ")\n"; break;
+        }
+    }
+}
+
 int
 main()
 {
@@ -288,27 +346,24 @@ main()
 
     std::vector< eote::Roll::Die > dieList;
 
-    /*dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Yellow );
-    dieList.push_back( eote::Roll::Die::Red );
-    dieList.push_back( eote::Roll::Die::Red );
-    dieList.push_back( eote::Roll::Die::Red );
+    //dieList.push_back( eote::Roll::Die::Yellow );
+    //dieList.push_back( eote::Roll::Die::Yellow );
+    //dieList.push_back( eote::Roll::Die::Yellow );
+    //dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
+    //dieList.push_back( eote::Roll::Die::Green );
+    //dieList.push_back( eote::Roll::Die::Green );
+
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Purple );
+    dieList.push_back( eote::Roll::Die::Black );
+
+    /*dieList.push_back( eote::Roll::Die::Purple );
     dieList.push_back( eote::Roll::Die::Green );
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Purple );
-    dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::Blue );
-    dieList.push_back( eote::Roll::Die::Black );
-    dieList.push_back( eote::Roll::Die::Black );
-    dieList.push_back( eote::Roll::Die::Black );
-    dieList.push_back( eote::Roll::Die::White );
-    dieList.push_back( eote::Roll::Die::White );
-    dieList.push_back( eote::Roll::Die::White );*/
+    dieList.push_back( eote::Roll::Die::Green );
+    dieList.push_back( eote::Roll::Die::Green );*/
+
 
     /*do
     {
@@ -317,7 +372,7 @@ main()
     while( eote::DiceListTotalPossibleSideCombinations( dieList ) != 0 );
     dieList.pop_back();*/
 
-    dieList.push_back( eote::Roll::Die::Yellow );
+    /*dieList.push_back( eote::Roll::Die::Yellow );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Green );
     dieList.push_back( eote::Roll::Die::Purple );
@@ -327,7 +382,7 @@ main()
     dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Blue );
     dieList.push_back( eote::Roll::Die::Black );
-    dieList.push_back( eote::Roll::Die::White );
+    dieList.push_back( eote::Roll::Die::White );*/
 
 
     uintmax_t count = 500000000000ull;
@@ -570,6 +625,26 @@ main()
         }
         */
     }
+
+    {
+        std::cout << "\n";
+        std::cout << "\n";
+
+        eote::DieValues min, max;
+        uint64_t numprobs;
+        GetMinMaxValues( table, min, max, numprobs );
+
+        PrintAtLeast( 0, table, min, max, combo_possibilities, std::cout );
+        std::cout << "\n";
+        PrintAtLeast( 1, table, min, max, combo_possibilities, std::cout );
+        std::cout << "\n";
+        PrintAtLeast( 2, table, min, max, combo_possibilities, std::cout );
+        std::cout << "\n";
+        PrintAtLeast( 3, table, min, max, combo_possibilities, std::cout );
+        std::cout << "\n";
+    }
+
+    std::cout << table.size() << " unique outcomes from " << combo_possibilities << " permutations\n";
 
     std::cout << std::endl;
 
