@@ -31,7 +31,7 @@ namespace eote
         Random::Random_Unsafe random_array[ NUM_THREADS ];
         if( roll_randomly ) for( uint64_t i = 0; i < NUM_THREADS; ++i ) { random_array[ i ] = Random::Random_Unsafe( Random::Int() ); }
 
-        std::cout.precision( 4 );
+        //std::cout.precision( 4 );
 
         // define the thread function
         auto _RunThreadDieRolls =

@@ -41,6 +41,7 @@ std::map< eote::DieValues, uintmax_t > SimplifyTableForAxies( std::map< eote::Di
 void ProbabilityTableToAreaCSV( std::map< eote::DieValues, uintmax_t > table, uint8_t axisA, uint8_t axisB, std::ostream& out );
 void GetMinMaxValues( const std::map< eote::DieValues, uintmax_t >& inputProbList, eote::DieValues& min, eote::DieValues& max, uint64_t& numprobs );
 void PrintAtLeast( std::size_t axis, const std::map< eote::DieValues, uintmax_t >& inputProbList, const eote::DieValues& min, const eote::DieValues& max, uint64_t numProbs, std::ostream& out = std::cout );
+void PrintAtMost( std::size_t axis, const std::map< eote::DieValues, uintmax_t >& inputProbList, const eote::DieValues& min, const eote::DieValues& max, uint64_t numProbs, std::ostream& out = std::cout );
 
 
 int
@@ -50,19 +51,19 @@ main()
 
     std::map< eote::Roll::Die, uintmax_t > dieList;
 
-    dieList[ eote::Roll::Die::Blue ] =   1;
-    dieList[ eote::Roll::Die::Yellow ] = 1;
-    dieList[ eote::Roll::Die::Green ] =  1;
+    dieList[ eote::Roll::Die::Blue ] =   2;
+    dieList[ eote::Roll::Die::Yellow ] = 2;
+    dieList[ eote::Roll::Die::Green ] =  2;
 
-    dieList[ eote::Roll::Die::Black ] =  1;
-    dieList[ eote::Roll::Die::Red ] =    1;
-    dieList[ eote::Roll::Die::Purple ] = 1;
+    dieList[ eote::Roll::Die::Black ] =  2;
+    dieList[ eote::Roll::Die::Red ] =    2;
+    dieList[ eote::Roll::Die::Purple ] = 2;
 
     //dieList[ eote::Roll::Die::White ] =  1;
 
     uintmax_t count = 500000000000ull;
 
-    std::cout << std::fixed;
+    //std::cout << std::fixed;
 
     //std::cout.unsetf( std::ios_base::floatfield );
 
@@ -93,7 +94,7 @@ main()
     {
         std::cout << std::endl;
 
-        std::cout.precision( 8 );
+        //std::cout.precision( 8 );
 
         std::vector< std::pair< uintmax_t, eote::DieValues > > probList;
 
@@ -166,14 +167,18 @@ main()
         uint64_t numprobs;
         GetMinMaxValues( table, min, max, numprobs );
 
-        PrintAtLeast( 0, table, min, max, combo_possibilities, std::cout );
-        std::cout << "\n";
-        PrintAtLeast( 1, table, min, max, combo_possibilities, std::cout );
-        std::cout << "\n";
-        PrintAtLeast( 2, table, min, max, combo_possibilities, std::cout );
-        std::cout << "\n";
-        PrintAtLeast( 3, table, min, max, combo_possibilities, std::cout );
-        std::cout << "\n";
+        for( int i = 0; i < 4; ++i )
+        {
+            PrintAtMost( i, table, min, max, combo_possibilities, std::cout );
+            std::cout << "\n";
+        }
+
+        for( int i = 0; i < 4; ++i )
+        {
+            PrintAtLeast( i, table, min, max, combo_possibilities, std::cout );
+            std::cout << "\n";
+        }
+
     }
 
     std::cout << table.size() << " unique outcomes from " << combo_possibilities << " permutations\n";
@@ -341,6 +346,40 @@ PrintAtLeast( std::size_t axis, const std::map< eote::DieValues, uintmax_t >& in
             }
         }
 
-        out << "At least " << i << " " << axis_str << ": " << (long double)(current)/(long double)(numProbs)*100.0 << " (" << current << "/" << numProbs << ")\n";
+        out << "At least " << i << " " << axis_str << ": " << (long double)(current)/(long double)(numProbs)*100.0 << "% (" << current << "/" << numProbs << ")\n";
+    }
+}
+
+void
+PrintAtMost( std::size_t axis, const std::map< eote::DieValues, uintmax_t >& inputProbList, const eote::DieValues& min, const eote::DieValues& max, uint64_t numProbs, std::ostream& out )
+{
+    axis %= 4;
+
+    std::string axis_str;
+
+    switch( axis )
+    {
+        case 0: axis_str = "Triumph"; break;
+        case 1: axis_str = "Success"; break;
+        case 2: axis_str = "Advantage"; break;
+        case 3: axis_str = "Force"; break;
+    }
+
+    for( int i = min[axis]; i <= max[axis]; ++i )
+    {
+        uint64_t current = 0;
+
+        for( auto pair : inputProbList )
+        {
+            auto dieResult = pair.first;
+            auto probValue = pair.second;
+
+            if( dieResult[axis] <= i )
+            {
+                current += probValue;
+            }
+        }
+
+        out << "At Most " << i << " " << axis_str << ": " << (long double)(current)/(long double)(numProbs)*100.0 << "% (" << current << "/" << numProbs << ")\n";
     }
 }

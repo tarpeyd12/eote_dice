@@ -123,7 +123,7 @@
 
 1528421927 c:\users\tarpeyd12\documents\github\eote_dice\roll.inl
 
-1528419390 source:c:\users\tarpeyd12\documents\github\eote_dice\main.cpp
+1528423176 source:c:\users\tarpeyd12\documents\github\eote_dice\main.cpp
 	"includes.h"
 	"die_values.h"
 	"roll.h"
@@ -150,7 +150,7 @@
 	"table_prob_templates.inl"
 	"table_prob.inl"
 
-1528419089 c:\users\tarpeyd12\documents\github\eote_dice\table_prob_templates.inl
+1528423247 c:\users\tarpeyd12\documents\github\eote_dice\table_prob_templates.inl
 	"die_values.h"
 	"roll.h"
 
