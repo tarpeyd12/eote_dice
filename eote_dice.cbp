@@ -37,6 +37,8 @@
 		</Compiler>
 		<Unit filename="die_values.cpp" />
 		<Unit filename="die_values.h" />
+		<Unit filename="die_values.inl" />
+		<Unit filename="includes.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="random.h" />
 		<Unit filename="random/random_functor.cpp" />
@@ -45,6 +47,9 @@
 		<Unit filename="roll.cpp" />
 		<Unit filename="roll.h" />
 		<Unit filename="roll.inl" />
+		<Unit filename="table_prob.h" />
+		<Unit filename="table_prob.inl" />
+		<Unit filename="table_prob_templates.inl" />
 		<Extensions>
 			<code_completion />
 			<envvars />

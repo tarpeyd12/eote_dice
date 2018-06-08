@@ -91,8 +91,9 @@
 1505255114 source:c:\users\tarpeyd12\documents\github\eote_dice\die_values.cpp
 	"die_values.h"
 
-1505874873 c:\users\tarpeyd12\documents\github\eote_dice\die_values.h
+1528414690 c:\users\tarpeyd12\documents\github\eote_dice\die_values.h
 	<sstream>
+	"die_values.inl"
 
 1485373940 source:c:\users\tarpeyd12\documents\github\eote_dice\random\random_functor.cpp
 	"random_functor.h"
@@ -111,7 +112,8 @@
 	"roll.h"
 	"random.h"
 
-1505855314 c:\users\tarpeyd12\documents\github\eote_dice\roll.h
+1528421352 c:\users\tarpeyd12\documents\github\eote_dice\roll.h
+	"includes.h"
 	"random.h"
 	"die_values.h"
 	"roll.inl"
@@ -119,9 +121,17 @@
 1485373940 c:\users\tarpeyd12\documents\github\eote_dice\random.h
 	"random/random_functor.h"
 
-1505855314 c:\users\tarpeyd12\documents\github\eote_dice\roll.inl
+1528421927 c:\users\tarpeyd12\documents\github\eote_dice\roll.inl
 
-1505898073 source:c:\users\tarpeyd12\documents\github\eote_dice\main.cpp
+1528419390 source:c:\users\tarpeyd12\documents\github\eote_dice\main.cpp
+	"includes.h"
+	"die_values.h"
+	"roll.h"
+	"table_prob.h"
+
+1528419150 c:\users\tarpeyd12\documents\github\eote_dice\die_values.inl
+
+1528418745 c:\users\tarpeyd12\documents\github\eote_dice\includes.h
 	<iostream>
 	<iomanip>
 	<fstream>
@@ -133,6 +143,16 @@
 	<unordered_map>
 	<memory>
 	<thread>
+
+1528418757 c:\users\tarpeyd12\documents\github\eote_dice\table_prob.h
+	"includes.h"
+	"die_values.h"
+	"table_prob_templates.inl"
+	"table_prob.inl"
+
+1528419089 c:\users\tarpeyd12\documents\github\eote_dice\table_prob_templates.inl
 	"die_values.h"
 	"roll.h"
+
+1528418191 c:\users\tarpeyd12\documents\github\eote_dice\table_prob.inl
 
