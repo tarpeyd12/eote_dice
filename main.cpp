@@ -13,9 +13,9 @@ namespace std
     {
         return std::max<Type>( std::min<Type>( v, b ), a );
     }
-
 }
 
+// we get really big numbers, so we want commas between digits, and my current IDE of choice (Code::Blocks) does not have built-in localization support for that
 class comma_numpunct : public std::numpunct< char >
 {
     protected:
